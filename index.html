@@ -1,0 +1,696 @@
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Archivo:wght@600;700&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --paper:#FBFAF7; --ink:#1C1E1C; --oak:#A8794A; --oak-soft:#EBDFCE;
+  --steel:#5A6570; --steel-soft:#E4E7E9; --line:#D8D5CD; --signal:#B03A2E;
+  --sans:'IBM Plex Sans',system-ui,sans-serif; --mono:'IBM Plex Mono',monospace; --disp:'Archivo',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased}
+.wrap{max-width:820px;margin:0 auto;padding:0 24px}
+.mono{font-family:var(--mono)}
+
+/* masthead */
+header.mast{border-bottom:1px solid var(--line);background:var(--paper)}
+.mast-in{max-width:820px;margin:0 auto;padding:20px 24px;display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+.logo{font-family:var(--disp);font-weight:700;font-size:20px;letter-spacing:-.02em}
+.logo span{color:var(--oak)}
+.mast-in .tag{font-family:var(--mono);font-size:11px;color:var(--steel);letter-spacing:.08em;text-transform:uppercase}
+
+/* hero */
+.hero{padding:48px 0 32px;border-bottom:1px solid var(--line)}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--oak);margin-bottom:14px}
+h1{font-family:var(--disp);font-weight:700;font-size:38px;line-height:1.08;letter-spacing:-.025em;max-width:16ch}
+.hero p{margin-top:16px;max-width:52ch;color:var(--steel)}
+.specs{display:flex;gap:28px;margin-top:28px;flex-wrap:wrap}
+.spec{border-left:2px solid var(--oak-soft);padding-left:12px}
+.spec b{font-family:var(--disp);font-size:20px;display:block;font-weight:600}
+.spec span{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--steel)}
+
+/* form */
+form{padding:36px 0 60px}
+.f-head{display:flex;justify-content:space-between;align-items:baseline;border-bottom:2px solid var(--ink);padding-bottom:8px;margin-bottom:4px}
+.f-head h2{font-family:var(--disp);font-size:17px;font-weight:600}
+.f-head .ref{font-family:var(--mono);font-size:11px;color:var(--steel)}
+.field{border-bottom:1px solid var(--line);padding:18px 0;display:grid;grid-template-columns:74px 1fr;gap:18px;align-items:start}
+.code{font-family:var(--mono);font-size:11px;color:var(--steel);padding-top:9px;letter-spacing:.04em}
+label{display:block;font-weight:500;margin-bottom:3px}
+.hint{font-size:12.5px;color:var(--steel);margin-bottom:9px}
+input,textarea{width:100%;font:inherit;font-size:15px;background:#fff;border:1px solid var(--line);border-radius:2px;padding:10px 12px;color:var(--ink)}
+textarea{min-height:104px;resize:vertical;line-height:1.55}
+input:focus,textarea:focus{outline:2px solid var(--oak);outline-offset:-1px;border-color:var(--oak)}
+.err input,.err textarea{border-color:var(--signal);background:#FDF6F5}
+.msg{color:var(--signal);font-size:12.5px;margin-top:6px;font-weight:500;display:none}
+.err .msg{display:block}
+.actions{padding-top:26px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+button{font:inherit;font-weight:600;cursor:pointer;border:none;border-radius:2px}
+.primary{background:var(--ink);color:var(--paper);padding:13px 30px;font-size:15px}
+.primary:hover{background:var(--oak)}
+.legal{font-size:12px;color:var(--steel);max-width:34ch}
+
+/* done */
+.done{padding:80px 0;text-align:center}
+.done h2{font-family:var(--disp);font-size:30px;margin-bottom:12px}
+.done p{color:var(--steel);max-width:40ch;margin:0 auto 8px}
+.ticket{font-family:var(--mono);font-size:13px;background:var(--oak-soft);display:inline-block;padding:8px 16px;border-radius:2px;margin-top:20px}
+
+footer{border-top:1px solid var(--line);padding:22px 0;font-size:12px;color:var(--steel);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+footer a{color:var(--steel);font-family:var(--mono);font-size:11px;text-decoration:none;border-bottom:1px dotted var(--line)}
+
+/* ---------- facilitator ---------- */
+.fac{display:none}
+.fbar{background:var(--ink);color:var(--paper);padding:0}
+.fbar-in{max-width:1120px;margin:0 auto;padding:12px 24px;display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.fbar b{font-family:var(--disp);font-size:14px;margin-right:14px;letter-spacing:.02em}
+.tab{background:transparent;color:#9BA3A9;padding:7px 14px;font-size:13.5px;font-weight:500;border-radius:2px}
+.tab.on{background:var(--oak);color:#fff}
+.fwrap{max-width:1120px;margin:0 auto;padding:28px 24px 70px}
+.panel{display:none}
+.panel.on{display:block}
+h3{font-family:var(--disp);font-size:22px;margin-bottom:6px;font-weight:600}
+.sub{color:var(--steel);font-size:14px;margin-bottom:22px;max-width:62ch}
+.cards{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:26px}
+.card{border:1px solid var(--line);background:#fff;border-radius:2px;padding:14px 18px;min-width:132px}
+.card b{font-family:var(--disp);font-size:27px;display:block;line-height:1.15}
+.card span{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--steel)}
+.q{display:grid;grid-template-columns:38px 1fr 96px 116px;gap:12px;align-items:center;border:1px solid var(--line);background:#fff;padding:11px 14px;margin-bottom:7px;border-radius:2px}
+.q.done{opacity:.42;background:transparent}
+.q .n{font-family:var(--mono);font-size:12px;color:var(--steel)}
+.q .who{font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.q .who em{display:block;font-style:normal;font-size:12px;color:var(--steel);font-weight:400}
+.q .wait{font-family:var(--mono);font-size:14px;text-align:right}
+.q .wait.hot{color:var(--signal);font-weight:500}
+.mini{background:var(--steel-soft);color:var(--ink);padding:7px 10px;font-size:12px;font-weight:500}
+.mini:hover{background:var(--oak);color:#fff}
+table{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:11.5px;background:#fff}
+th,td{border:1px solid var(--line);padding:5px 7px;text-align:left;white-space:nowrap}
+th{background:var(--steel-soft);font-weight:500;position:sticky;top:0}
+.scroll{max-height:440px;overflow:auto;border:1px solid var(--line)}
+.bars{background:#fff;border:1px solid var(--line);padding:18px;border-radius:2px;margin-bottom:22px}
+.bar{display:grid;grid-template-columns:190px 1fr 66px;gap:12px;align-items:center;margin-bottom:9px;font-size:13.5px}
+.bar .t{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bar .t i{font-family:var(--mono);font-style:normal;font-size:11px;color:var(--steel);margin-right:7px}
+.track{background:var(--steel-soft);height:19px;border-radius:1px;overflow:hidden}
+.fill{height:100%;background:var(--steel)}
+.fill.peak{background:var(--signal)}
+.fill.good{background:var(--oak)}
+.bar .v{font-family:var(--mono);font-size:12px;text-align:right}
+.note{background:var(--oak-soft);border-left:3px solid var(--oak);padding:13px 16px;margin-bottom:22px;font-size:14px;border-radius:0 2px 2px 0}
+.note b{font-weight:600}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+@media(max-width:800px){.two{grid-template-columns:1fr}h1{font-size:30px}}
+.quote{background:#fff;border:1px solid var(--line);padding:11px 14px;margin-bottom:8px;font-size:13.5px;border-radius:2px}
+.quote i{font-family:var(--mono);font-style:normal;font-size:10.5px;color:var(--steel);display:block;margin-bottom:3px}
+.lane{background:#fff;border:1px solid var(--line);padding:20px;border-radius:2px;margin-bottom:22px}
+.lane h4{font-family:var(--mono);font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--steel);font-weight:400;margin-bottom:11px}
+.flow{display:flex;align-items:stretch;gap:0;flex-wrap:wrap}
+.node{border:1px solid var(--line);background:var(--paper);padding:10px 13px;min-width:118px;border-radius:2px}
+.node.bn{border:2px solid var(--signal);background:#FDF6F5}
+.node b{display:block;font-size:13.5px;font-weight:500}
+.node span{font-family:var(--mono);font-size:11px;color:var(--steel)}
+.gap{display:flex;flex-direction:column;justify-content:center;align-items:center;padding:0 9px;min-width:74px}
+.gap span{font-family:var(--mono);font-size:11px;color:var(--signal)}
+.gap .arw{color:var(--line);font-size:15px;line-height:1}
+.vis{border-top:1px dashed var(--steel);margin:15px 0;position:relative}
+.vis span{position:absolute;top:-8px;left:0;background:#fff;padding-right:9px;font-family:var(--mono);font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:var(--steel)}
+.tl{display:grid;grid-template-columns:78px 1fr;gap:12px;align-items:center;margin-top:8px;font-size:13px}
+.tl .lbl{font-family:var(--mono);font-size:11px;color:var(--steel);text-align:right}
+.tl .b{height:24px;border-radius:1px;display:flex;align-items:center;padding-left:9px;color:#fff;font-family:var(--mono);font-size:11.5px}
+.empty{text-align:center;padding:56px 20px;color:var(--steel);border:1px dashed var(--line);border-radius:2px}
+.ctrl{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-bottom:20px;font-size:13.5px;color:var(--steel)}
+.ctrl input{width:62px;padding:6px 8px;font-family:var(--mono)}
+</style>
+
+<!-- ============ PARTICIPANT ============ -->
+<div id="site">
+<header class="mast"><div class="mast-in">
+  <div class="logo">NORDLICHT<span>.</span></div>
+  <div class="tag">Büromöbel · Leipzig · seit 1998</div>
+</div></header>
+
+<div class="wrap">
+  <section class="hero">
+    <div class="eyebrow">Request a quote</div>
+    <h1>Office furniture that grows with your team.</h1>
+    <p>Desks, storage and acoustic partitions, delivered and assembled across Saxony. Tell us about your space and we will price it up.</p>
+    <div class="specs">
+      <div class="spec"><b>3–5 days</b><span>Typical quote turnaround</span></div>
+      <div class="spec"><b>120+</b><span>Startups furnished</span></div>
+      <div class="spec"><b>Free</b><span>Delivery over €2,000</span></div>
+    </div>
+  </section>
+
+  <form id="form" novalidate>
+    <div class="f-head"><h2>Your requirements</h2><div class="ref mono" id="ref">NL-ANF-0000</div></div>
+
+    <div class="field" id="f-NL01"><div class="code">NL-01</div><div>
+      <label for="NL01">Company name</label>
+      <input id="NL01" autocomplete="off">
+      <div class="msg">Required.</div></div></div>
+
+    <div class="field" id="f-NL02"><div class="code">NL-02</div><div>
+      <label for="NL02">Email</label>
+      <input id="NL02" autocomplete="off">
+      <div class="msg">Required.</div></div></div>
+
+    <div class="field" id="f-NL03"><div class="code">NL-03</div><div>
+      <label for="NL03">Total floor area</label>
+      <div class="hint">Net usable area in square metres, excluding corridors and sanitary facilities.</div>
+      <input id="NL03" autocomplete="off" placeholder="m²">
+      <div class="msg">Enter digits only, for example 240.</div></div></div>
+
+    <div class="field" id="f-NL04"><div class="code">NL-04</div><div>
+      <label for="NL04">Number of workstations</label>
+      <input id="NL04" autocomplete="off">
+      <div class="msg">Enter digits only.</div></div></div>
+
+    <div class="field" id="f-NL05"><div class="code">NL-05</div><div>
+      <label for="NL05">Project reference</label>
+      <div class="hint">As shown on your planning documents.</div>
+      <input id="NL05" autocomplete="off">
+      <div class="msg">Required.</div></div></div>
+
+    <div class="field" id="f-NL06"><div class="code">NL-06</div><div>
+      <label for="NL06">Requested delivery date</label>
+      <div class="hint">Format DD.MM.YYYY</div>
+      <input id="NL06" autocomplete="off" placeholder="DD.MM.YYYY">
+      <div class="msg">Use the format DD.MM.YYYY, for example 14.09.2026.</div></div></div>
+
+    <div class="field" id="f-NL07"><div class="code">NL-07</div><div>
+      <label for="NL07">Anything else we should know?</label>
+      <div class="hint">Describe your space and what you are looking for.</div>
+      <textarea id="NL07"></textarea>
+      <div class="msg">Required.</div></div></div>
+
+    <div class="actions">
+      <button type="submit" class="primary">Send request</button>
+      <div class="legal">We reply within 3–5 working days. Your details are used for this quote only.</div>
+    </div>
+  </form>
+
+  <div class="done" id="done" style="display:none">
+    <h2>Request received</h2>
+    <p>Thank you. Our team will prepare your quote and get back to you.</p>
+    <div class="ticket" id="ticket"></div>
+    <div style="margin-top:34px;text-align:left;max-width:520px;margin-left:auto;margin-right:auto;border-top:1px solid var(--line);padding-top:22px">
+      <div style="font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--steel);margin-bottom:10px">For the workshop</div>
+      <div id="mysum" style="font-size:14px;margin-bottom:16px"></div>
+      <div style="font-size:13px;color:var(--steel);margin-bottom:9px">Copy the line below and paste it where the facilitator asks.</div>
+      <textarea id="cpfall" style="font-family:var(--mono);font-size:10.5px;min-height:74px" readonly></textarea>
+      <button class="mini" id="cpbtn" onclick="copyMine()" style="margin-top:10px">Copy my line</button>
+    </div>
+  </div>
+
+  <footer><div>Nordlicht Büromöbel GmbH · Leipzig</div><button id="flink" style="background:none;color:var(--steel);font-family:var(--mono);font-size:11px;border-bottom:1px dotted var(--line);padding:0">Facilitator view</button></footer>
+</div>
+</div>
+
+<!-- ============ FACILITATOR ============ -->
+<div class="fac" id="fac">
+<div class="fbar"><div class="fbar-in">
+  <b>NORDLICHT · Workshop console</b>
+  <button class="tab on" data-p="queue">Queue</button>
+  <button class="tab" data-p="trace">Trace</button>
+  <button class="tab" data-p="raw">Raw data</button>
+  <button class="tab" data-p="dash">Analysis</button>
+  <button class="tab" data-p="after">Redesigned</button>
+  <button class="tab" data-p="back" style="margin-left:auto">← Form</button>
+</div></div>
+<div class="fwrap">
+
+  <div class="panel on" id="p-queue">
+    <h3>Incoming requests</h3>
+    <div class="sub">Every request that arrives has to be turned into a quote by someone on your side. One person, one at a time. Set how long that takes and the queue does the rest.</div>
+    <div class="ctrl">
+      <span>Minutes your team needs to prepare one quote by hand</span><input type="number" id="mpq" value="8" min="1" max="60">
+      <span id="capline"></span>
+    </div>
+    <div style="border:1px solid var(--line);background:#fff;border-radius:2px;padding:16px 18px;margin-bottom:22px">
+      <div style="font-weight:500;font-size:14px;margin-bottom:6px">Collect the room</div>
+      <div style="font-size:13px;color:var(--steel);margin-bottom:10px">Each person has a line on their confirmation screen starting with <span class="mono">NL~</span>. Paste them here, one per line.</div>
+      <textarea id="pastebox" style="min-height:88px;font-family:var(--mono);font-size:11px" placeholder="NL~NL-ANF-4821~Halbwert Robotics~…"></textarea>
+      <div style="display:flex;gap:9px;margin-top:10px;flex-wrap:wrap;align-items:center">
+        <button class="mini" onclick="addPasted()">Add lines</button>
+        <button class="mini" onclick="loadDemo()">Load demo data</button>
+        <button class="mini" onclick="wipe()">Clear</button>
+        <span id="diag" class="mono" style="font-size:11px;color:var(--steel)"></span>
+      </div>
+    </div>
+    <div class="cards" id="qcards"></div>
+    <div id="qlist"></div>
+  </div>
+
+  <div class="panel" id="p-trace">
+    <h3>Where the cursor went</h3>
+    <div class="sub">Cursor position sampled twenty times a second, plus every click. Nobody typed this. It was recorded while the form was being filled in.</div>
+    <div id="trace"></div>
+  </div>
+
+  <div class="panel" id="p-raw">
+    <h3>What was actually recorded</h3>
+    <div class="sub">One row per person, per field. Seven rows for every request that came in. This is the shape process data arrives in before anyone touches it.</div>
+    <div class="scroll"><table id="rawtab"></table></div>
+    <div style="font-size:13px;color:var(--steel);margin-top:14px;max-width:64ch">
+      <b>case</b> is one request. <b>field</b> is the part number printed next to each question on the form. <b>seconds in field</b> is how long the cursor sat in that box. <b>times entered</b> counts how often someone came back to a field after leaving it. <b>errors</b> is how often the form rejected what they wrote.
+    </div>
+  </div>
+
+  <div class="panel" id="p-dash">
+    <h3>The same data, read</h3>
+    <div class="sub">Nothing here was added. It is the rows from the previous tab, grouped and counted.</div>
+    <div id="dash"></div>
+  </div>
+
+  <div class="panel" id="p-after">
+    <h3>One field instead of six</h3>
+    <div class="sub">The redesigned form asks the customer to describe what they need in their own words. A model reads that text and fills in the structured fields.</div>
+    <div class="note" style="background:var(--steel-soft);border-left-color:var(--steel)"><b>Placeholder figures.</b> The "after" numbers on this screen are illustrative and not measured. The "before" numbers are real and come from this room.</div>
+    <div id="after"></div>
+  </div>
+
+</div>
+</div>
+
+<script>
+const FIELDS=[["NL01","Company name"],["NL02","Email"],["NL03","Total floor area"],["NL04","Workstations"],["NL05","Project reference"],["NL06","Delivery date"],["NL07","Free text"]];
+const LBL=Object.fromEntries(FIELDS);
+const S={}; FIELDS.forEach(([k])=>S[k]={dwell:0,focus:0,clicks:0,errors:0,len:0,_t:0});
+let started=0, submits=0, errTotal=0, myId=null, wrote=false;
+
+const $=id=>document.getElementById(id);
+const pad=n=>String(n).padStart(2,"0");
+const mmss=ms=>{const s=Math.max(0,Math.round(ms/1000));return pad(Math.floor(s/60))+":"+pad(s%60)};
+const rid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+
+$("ref").textContent="NL-ANF-"+String(Math.floor(1000+Math.random()*8999));
+
+FIELDS.forEach(([k])=>{
+  const el=$(k);
+  el.addEventListener("focus",()=>{S[k]._t=performance.now();S[k].focus++;if(!started){started=Date.now();stash("started")}});
+  el.addEventListener("blur",()=>{if(S[k]._t){S[k].dwell+=performance.now()-S[k]._t;S[k]._t=0}});
+  el.addEventListener("click",()=>S[k].clicks++);
+});
+
+function fail(k,on){$("f-"+k.replace("NL","NL")).classList.toggle("err",on);if(on){S[k].errors++;errTotal++}}
+$("f-NL01").id="f-NL01";
+
+function validate(){
+  let ok=true;
+  const chk=(k,test)=>{const v=$(k).value.trim();S[k].len=v.length;const bad=!test(v);document.getElementById("f-"+k.slice(0,2)+k.slice(2)).classList.toggle("err",bad);if(bad){S[k].errors++;errTotal++;ok=false}};
+  chk("NL01",v=>v.length>0);
+  chk("NL02",v=>/.+@.+\..+/.test(v));
+  chk("NL03",v=>/^\d+$/.test(v));
+  chk("NL04",v=>/^\d+$/.test(v));
+  chk("NL05",v=>v.length>0);
+  chk("NL06",v=>/^\d{2}\.\d{2}\.\d{4}$/.test(v));
+  chk("NL07",v=>v.length>0);
+  return ok;
+}
+
+$("form").addEventListener("submit",async e=>{
+  e.preventDefault(); submits++;
+  FIELDS.forEach(([k])=>{if(S[k]._t){S[k].dwell+=performance.now()-S[k]._t;S[k]._t=performance.now()}});
+  if(!validate()){document.querySelector(".err")?.scrollIntoView({behavior:"smooth",block:"center"});return}
+  await stash("complete");
+  const fb=formBox();TRACE.w=TRACE.w||fb.w;TRACE.h=TRACE.h||fb.h;
+  TRACE.html=$("form").outerHTML;
+  RECORDING=false;
+  $("form").style.display="none";
+  $("ticket").textContent="Reference "+$("ref").textContent;
+  const slow=FIELDS.filter(([k])=>k!=="NL07").map(([k,l])=>[l,S[k].dwell]).sort((a,b)=>b[1]-a[1])[0];
+  $("mysum").innerHTML=`You took <b>${mmss(LAST.total)}</b> in total and pressed send <b>${LAST.submits}</b> time${LAST.submits===1?"":"s"}.`
+    +`<br>Of the short questions, <b>${slow[0]}</b> held you up longest (${mmss(slow[1])}).`
+    +`<br>You spent <b>${mmss(S.NL07.dwell)}</b> on the open question at the end and wrote <b>${LAST.fields.NL07.len}</b> characters there.`
+    +`<div class="mono" style="font-size:11px;color:var(--steel);margin-top:8px">${TRACE.pts.length} cursor positions · ${TRACE.clicks.length} clicks recorded</div>`;
+  $("cpfall").value=encode(LAST);
+  $("done").style.display="block";
+  window.scrollTo({top:0,behavior:"smooth"});
+});
+
+async function stash(status){
+  if(!myId)myId=rid();
+  const rec={id:myId,status,ref:$("ref").textContent,company:$("NL01").value.trim()||"—",
+    started,submitted:status==="complete"?Date.now():null,
+    total:started?Date.now()-started:0,submits,errors:errTotal,
+    text:$("NL07").value.trim(),
+    fields:Object.fromEntries(FIELDS.map(([k])=>[k,{dwell:Math.round(S[k].dwell),focus:S[k].focus,clicks:S[k].clicks,errors:S[k].errors,len:$(k).value.trim().length}]))};
+  LAST=rec;
+  try{if(window.storage)await window.storage.set("nl:sub:"+myId,JSON.stringify(rec),true)}catch(e){}
+}
+let LAST=null;
+const clean=s=>String(s||"").replace(/[~\r\n|]/g," ").trim();
+
+function encode(rec){
+  const f=FIELDS.map(([k])=>{const x=rec.fields[k];return [x.dwell,x.focus,x.clicks,x.errors,x.len].join(",")}).join("|");
+  return ["NL",rec.ref,clean(rec.company),rec.total,rec.submits,rec.errors,f,clean(rec.text).slice(0,220)].join("~");
+}
+function decode(line){
+  const p=line.trim().split("~");
+  if(p[0]!=="NL"||p.length<8)return null;
+  const fs=p[6].split("|"),fields={};
+  FIELDS.forEach(([k],i)=>{const v=(fs[i]||"0,0,0,0,0").split(",").map(Number);
+    fields[k]={dwell:v[0]||0,focus:v[1]||0,clicks:v[2]||0,errors:v[3]||0,len:v[4]||0}});
+  return{id:p[1]+"-"+Math.random().toString(36).slice(2,5),status:"complete",ref:p[1],company:p[2]||"—",
+    total:+p[3]||0,submits:+p[4]||1,errors:+p[5]||0,text:p[7]||"",fields};
+}
+
+window.copyMine=async()=>{
+  if(!LAST)return;
+  const t=encode(LAST),a=$("cpfall");
+  a.style.display="block";a.value=t;a.focus();a.select();
+  try{await navigator.clipboard.writeText(t);$("cpbtn").textContent="Copied to clipboard"}
+  catch(e){try{document.execCommand("copy");$("cpbtn").textContent="Copied"}
+  catch(e2){$("cpbtn").textContent="Select the text below and copy it"}}
+};
+
+/* ---------------- facilitator ---------------- */
+let DATA=[],seen={},timer=null,quoted={};
+let FACMODE=false;
+const isFac=()=>FACMODE;
+
+function route(){
+  const f=isFac();
+  $("site").style.display=f?"none":"block";
+  $("fac").style.display=f?"block":"none";
+  if(f){pull()}
+}
+$("flink").addEventListener("click",e=>{e.preventDefault();FACMODE=true;route();scrollTo(0,0)});
+
+document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>{
+  const p=b.dataset.p;
+  if(p==="back"){FACMODE=false;route();scrollTo(0,0);return}
+  document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("on",x===b));
+  document.querySelectorAll(".panel").forEach(x=>x.classList.toggle("on",x.id==="p-"+p));
+  if(p==="trace")paintTrace(); if(p==="raw")paintRaw(); if(p==="dash")paintDash(); if(p==="after")paintAfter();
+}));
+
+let DIAG="checking…",KEYSFOUND=0;
+
+async function readKey(k){
+  const tries=k.startsWith("nl:sub:")?[k]:["nl:sub:"+k,k];
+  for(const t of tries){
+    try{const g=await window.storage.get(t,true);if(g&&g.value)return JSON.parse(g.value)}catch(e){}
+  }
+  return null;
+}
+
+async function pull(){
+  if(!window.storage){DIAG="collect by paste";paintQueue();return}
+  try{
+    const r=await window.storage.list("nl:sub:",true);
+    const keys=(r&&r.keys)||[];
+    for(const k of keys){const rec=await readKey(k);if(rec&&rec.id){DATA=DATA.filter(d=>d.id!==rec.id);DATA.push(rec)}}
+    if(keys.length)DIAG=`${keys.length} received automatically`;
+  }catch(e){DIAG="collect by paste"}
+  paintQueue();
+}
+window.wipe=()=>{DATA=[];quoted={};DIAG="cleared";repaintActive()};
+
+window.addPasted=()=>{
+  const box=$("pastebox"),txt=box.value;
+  if(!txt.trim())return;
+  let n=0;
+  txt.split(/[\r\n]+/).forEach(line=>{
+    const s=line.trim();if(!s)return;
+    let rec=null;
+    if(s.startsWith("NL~"))rec=decode(s);
+    else if(s.startsWith("{")){try{const j=JSON.parse(s);if(j&&j.fields)rec=Object.assign(j,{id:j.id||Math.random().toString(36)})}catch(e){}}
+    if(rec){DATA.push(rec);n++}
+  });
+  box.value="";
+  DIAG=n?`${n} line${n===1?"":"s"} added · ${done_().length} in the queue`:"no valid lines found in that paste";
+  repaintActive();
+};
+
+window.loadDemo=()=>{
+  const names=["Halbwert Robotics","Kesselhaus Coffee","Vireo Labs","Nordstern Bikes","Plansoll GmbH","Aurora Textil","Klarfeld Analytics","Mühle & Sohn","Delta Verde","Sonnhalde Care","Brackwasser Studio","Ostwind Energy"];
+  const texts=["We are moving into a converted warehouse and need about twenty desks plus some acoustic panels, the ceiling is very high and echoes badly","Small team of eight, mostly hybrid so we need fewer fixed desks and more shared tables and storage for people who come in twice a week","Need standing desks for the whole engineering team, back problems, and a couple of quiet booths for calls","We took over the floor above us and need to furnish it before our new hires start in October, budget is tight","Looking for storage mainly, we have desks already but nowhere to put anything, and a meeting table for six"];
+  const base=Date.now()-14*60000;
+  DATA=names.map((c,i)=>{
+    const f={},pat={NL01:[9000,1,1,0],NL02:[11000,1,1,0],NL03:[46000,3,4,1],NL04:[14000,1,1,0],NL05:[52000,4,5,1],NL06:[31000,2,2,1],NL07:[68000,2,2,0]};
+    FIELDS.forEach(([k])=>{const p=pat[k],j=.6+Math.random()*.9;
+      f[k]={dwell:Math.round(p[0]*j),focus:Math.max(1,Math.round(p[1]*j)),clicks:Math.max(1,Math.round(p[2]*j)),errors:Math.random()<p[3]*.5?1:0,len:k==="NL07"?texts[i%texts.length].length:Math.round(6+Math.random()*14)};
+    });
+    const total=Object.values(f).reduce((s,x)=>s+x.dwell,0);
+    return{id:"demo"+i,status:i<10?"complete":"started",ref:"NL-ANF-"+(2100+i*137%7000),company:c,
+      started:base+i*38000,submitted:i<10?base+i*38000+total:null,total,submits:1+(Math.random()<.55?1:0),
+      errors:Math.round(Math.random()*3),text:texts[i%texts.length],fields:f};
+  });
+  DIAG="demo data loaded · not from the room";
+  repaintActive();
+};
+
+const done_=()=>DATA.filter(d=>d.status==="complete");
+
+function paintQueue(){
+  const D=done_(),mpq=+($("mpq").value||8);
+  const avg=D.length?D.reduce((s,d)=>s+d.total,0)/D.length:0;
+  const retries=D.filter(d=>d.submits>1).length;
+  const lastWait=D.length*mpq;
+  $("qcards").innerHTML=`
+    <div class="card"><b>${D.length}</b><span>Requests in</span></div>
+    <div class="card"><b>${mmss(avg)}</b><span>Avg time to fill</span></div>
+    <div class="card"><b>${retries}</b><span>Needed a second try</span></div>
+    <div class="card"><b>${lastWait} min</b><span>Wait for the last one</span></div>`;
+  $("capline").textContent=`→ ${D.length} requests × ${mpq} min = ${lastWait} minutes of back-office work`;
+  const dg=$("diag");if(dg)dg.textContent=DIAG;
+  if(!D.length){$("qlist").innerHTML='<div class="empty">No requests yet. Paste the lines from the room below, or load demo data.</div>';return}
+  $("qlist").innerHTML=D.map((d,i)=>{
+    const w=(i+1)*mpq;
+    const hot=!quoted[d.id]&&w>30;
+    return `<div class="q ${quoted[d.id]?"done":""}">
+      <div class="n">${pad(i+1)}</div>
+      <div class="who">${esc(d.company)}<em>${d.ref}</em></div>
+      <div class="wait ${hot?"hot":""}">${w} min</div>
+      <div>${quoted[d.id]?'<span class="mono" style="font-size:11px;color:var(--steel)">quoted</span>':`<button class="mini" onclick="mark('${d.id}')">Mark as quoted</button>`}</div>
+    </div>`}).join("");
+}
+window.mark=id=>{quoted[id]=Date.now();paintQueue()};
+$("mpq").addEventListener("input",paintQueue);
+const esc=s=>String(s).replace(/[<>&]/g,c=>({"<":"&lt;",">":"&gt;","&":"&amp;"}[c]));
+
+const TRACE={pts:[],clicks:[],w:0,h:0,t0:0};
+let lastSample=0,RECORDING=true;
+function formBox(){const f=$("form");if(!f)return null;const r=f.getBoundingClientRect();return{x:r.left+scrollX,y:r.top+scrollY,w:r.width,h:r.height}}
+addEventListener("mousemove",e=>{
+  if(!RECORDING||isFac())return;
+  const now=performance.now();if(now-lastSample<50)return;lastSample=now;
+  const b=formBox();if(!b||!b.w)return;
+  if(!TRACE.t0)TRACE.t0=Date.now();
+  TRACE.w=b.w;TRACE.h=b.h;
+  const x=e.pageX-b.x,y=e.pageY-b.y;
+  if(x<-40||y<-40||x>b.w+40||y>b.h+40)return;
+  TRACE.pts.push([Math.round(x),Math.round(y)]);
+  if(TRACE.pts.length>9000)TRACE.pts.splice(0,3000);
+},{passive:true});
+addEventListener("pointerdown",e=>{
+  if(!RECORDING||isFac())return;
+  const b=formBox();if(!b||!b.w)return;
+  TRACE.w=TRACE.w||b.w;TRACE.h=TRACE.h||b.h;
+  const x=e.pageX-b.x,y=e.pageY-b.y;
+  if(x<-20||y<-20||x>b.w+20||y>b.h+20)return;
+  TRACE.clicks.push([Math.round(x),Math.round(y)]);
+},{passive:true,capture:true});
+
+function paintTrace(){
+  const box=$("trace");
+  if(!TRACE.pts.length){
+    box.innerHTML='<div class="empty">Nothing recorded yet.<br><br>Go back to the form on this machine, fill it in, then come back to this tab.</div>';return}
+  const W=TRACE.w||820,H=TRACE.h||1200,scale=Math.min(1,760/W),w=Math.round(W*scale),h=Math.round(H*scale);
+  const secs=Math.max(1,Math.round((Date.now()-TRACE.t0)/1000));
+  const dist=Math.round(TRACE.pts.reduce((s,p,i)=>i?s+Math.hypot(p[0]-TRACE.pts[i-1][0],p[1]-TRACE.pts[i-1][1]):0,0));
+  box.innerHTML=`
+    <div class="note" style="background:var(--steel-soft);border-left-color:var(--steel)"><b>One session, not fifteen.</b> This is a single person filling in the form. It shows what the tool records. It is not evidence about the room, that comes from the aggregate on the next tabs.</div>
+    <div class="cards">
+      <div class="card"><b>${TRACE.pts.length}</b><span>Positions sampled</span></div>
+      <div class="card"><b>${TRACE.clicks.length}</b><span>Clicks</span></div>
+      <div class="card"><b>${(dist/1000).toFixed(1)} k</b><span>Pixels travelled</span></div>
+      <div class="card"><b>${mmss(secs*1000)}</b><span>Recorded</span></div>
+    </div>
+    <div class="ctrl">
+      <label><input type="checkbox" id="tHeat" checked style="width:auto"> Heat</label>
+      <label><input type="checkbox" id="tPath" style="width:auto"> Path</label>
+      <label><input type="checkbox" id="tClick" checked style="width:auto"> Clicks</label>
+    </div>
+    <div style="position:relative;width:${w}px;max-width:100%;border:1px solid var(--line);background:#fff;border-radius:2px;overflow:hidden">
+      <div id="ghost" style="transform:scale(${scale});transform-origin:0 0;width:${W}px;opacity:.32;pointer-events:none"></div>
+      <canvas id="tcan" width="${w}" height="${h}" style="position:absolute;inset:0;width:100%;pointer-events:none"></canvas>
+    </div>`;
+  const g=$("ghost");g.innerHTML=TRACE.html||$("form").outerHTML;
+  const gf=g.querySelector("form");if(gf)gf.style.display="block";
+  g.querySelectorAll("input,textarea,button").forEach(el=>el.disabled=true);
+  g.style.height=h+"px";
+  ["tHeat","tPath","tClick"].forEach(id=>$(id).addEventListener("change",()=>draw(scale,w,h)));
+  draw(scale,w,h);
+}
+
+function draw(s,w,h){
+  const c=$("tcan"),x=c.getContext("2d");
+  x.clearRect(0,0,w,h);
+  if($("tHeat").checked){
+    const cell=14,grid={},max=1;
+    let peak=1;
+    TRACE.pts.forEach(p=>{const k=Math.floor(p[0]*s/cell)+":"+Math.floor(p[1]*s/cell);grid[k]=(grid[k]||0)+1;if(grid[k]>peak)peak=grid[k]});
+    x.globalCompositeOperation="multiply";
+    Object.entries(grid).forEach(([k,v])=>{
+      const [gx,gy]=k.split(":").map(Number),t=Math.min(1,v/peak*2.2);
+      const r=x.createRadialGradient(gx*cell+cell/2,gy*cell+cell/2,0,gx*cell+cell/2,gy*cell+cell/2,cell*2.1);
+      const col=t>.66?"176,58,46":t>.33?"200,120,40":"90,101,112";
+      r.addColorStop(0,`rgba(${col},${.10+t*.42})`);r.addColorStop(1,`rgba(${col},0)`);
+      x.fillStyle=r;x.fillRect(gx*cell-cell*2,gy*cell-cell*2,cell*5,cell*5);
+    });
+    x.globalCompositeOperation="source-over";
+  }
+  if($("tPath").checked){
+    x.strokeStyle="rgba(28,30,28,.32)";x.lineWidth=1;x.beginPath();
+    TRACE.pts.forEach((p,i)=>i?x.lineTo(p[0]*s,p[1]*s):x.moveTo(p[0]*s,p[1]*s));
+    x.stroke();
+  }
+  if($("tClick").checked){
+    TRACE.clicks.forEach(p=>{
+      x.beginPath();x.arc(p[0]*s,p[1]*s,7,0,7);x.fillStyle="rgba(176,58,46,.24)";x.fill();
+      x.beginPath();x.arc(p[0]*s,p[1]*s,2.5,0,7);x.fillStyle="rgba(176,58,46,.95)";x.fill();
+    });
+  }
+}
+
+function repaintActive(){
+  const on=document.querySelector(".panel.on");if(!on)return;
+  const id=on.id.replace("p-","");
+  if(id==="trace")paintTrace();else if(id==="raw")paintRaw();else if(id==="dash")paintDash();else if(id==="after")paintAfter();else paintQueue();
+}
+
+function paintRaw(){
+  const rows=[];
+  done_().forEach(d=>FIELDS.forEach(([k,l])=>{
+    const f=(d.fields||{})[k];if(!f)return;
+    rows.push([d.ref||"—",k,l,((f.dwell||0)/1000).toFixed(1),f.focus||0,f.clicks||0,f.errors||0,f.len||0]);
+  }));
+  $("rawtab").innerHTML=`<tr><th>case</th><th>field</th><th>field name</th><th>seconds in field</th><th>times entered</th><th>clicks</th><th>errors</th><th>characters typed</th></tr>`+
+    (rows.length?rows.map(r=>"<tr>"+r.map(c=>`<td>${c}</td>`).join("")+"</tr>").join(""):`<tr><td colspan="8">no data</td></tr>`);
+}
+
+function agg(){
+  const D=done_(),o={},g=(d,k)=>(d.fields||{})[k]||{dwell:0,focus:0,clicks:0,errors:0,len:0};
+  FIELDS.forEach(([k,l])=>{
+    const n=D.length||1;
+    o[k]={label:l,dwell:D.reduce((s,d)=>s+g(d,k).dwell,0)/n,
+      focus:D.reduce((s,d)=>s+g(d,k).focus,0)/n,
+      clicks:D.reduce((s,d)=>s+g(d,k).clicks,0)/n,
+      errors:D.reduce((s,d)=>s+g(d,k).errors,0),
+      len:D.reduce((s,d)=>s+g(d,k).len,0)/n};
+  });
+  return o;
+}
+
+function bars(o,key,fmt,unit){
+  const max=Math.max(...Object.values(o).map(x=>x[key]))||1;
+  return Object.entries(o).map(([k,v])=>{
+    const peak=v[key]===max&&max>0;
+    return `<div class="bar"><div class="t"><i>${k}</i>${v.label}</div>
+      <div class="track"><div class="fill ${peak?"peak":""}" style="width:${Math.max(1,v[key]/max*100)}%"></div></div>
+      <div class="v">${fmt(v[key])}${unit||""}</div></div>`}).join("");
+}
+
+function boxplot(){
+  const D=done_();if(D.length<3)return "";
+  const rows=FIELDS.map(([k,l])=>{
+    const v=D.map(d=>((d.fields||{})[k]||{}).dwell||0).sort((a,b)=>a-b);
+    const q=p=>v[Math.min(v.length-1,Math.floor(p*(v.length-1)))];
+    return{k,l,min:v[0],q1:q(.25),med:q(.5),q3:q(.75),max:v[v.length-1],spread:v[v.length-1]-v[0]};
+  });
+  const top=Math.max(...rows.map(r=>r.max))||1;
+  const worst=rows.slice().sort((a,b)=>(b.spread/Math.max(b.med,1))-(a.spread/Math.max(a.med,1)))[0];
+  return `<div class="bars">
+    <div class="bar" style="margin-bottom:14px"><div class="t" style="font-weight:600">How much the same field varies between people</div><div class="t" style="font-size:12px;color:var(--steel)">line = fastest to slowest · box = middle half · mark = typical</div><div></div></div>
+    ${rows.map(r=>`<div class="bar"><div class="t"><i>${r.k}</i>${r.l}</div>
+      <div class="track" style="position:relative;background:transparent;border-bottom:1px solid var(--steel-soft)">
+        <div style="position:absolute;top:9px;left:${r.min/top*100}%;width:${Math.max(.5,(r.max-r.min)/top*100)}%;height:1px;background:var(--steel)"></div>
+        <div style="position:absolute;top:3px;left:${r.q1/top*100}%;width:${Math.max(1,(r.q3-r.q1)/top*100)}%;height:13px;background:${r===worst?"rgba(176,58,46,.30)":"rgba(90,101,112,.22)"};border:1px solid ${r===worst?"var(--signal)":"var(--steel)"}"></div>
+        <div style="position:absolute;top:1px;left:${r.med/top*100}%;width:2px;height:17px;background:${r===worst?"var(--signal)":"var(--ink)"}"></div>
+      </div>
+      <div class="v">${mmss(r.med)}</div></div>`).join("")}
+  </div>
+  <div class="note"><b>${worst.l} is the least predictable question on the form.</b> Some people answered it almost instantly, others took many times longer. A step that behaves differently every time it runs is not a step that has been designed. It is one people are improvising their way through, and improvisation is what you cannot delegate, scale, or automate.</div>`;
+}
+
+function paintDash(){
+  const D=done_();
+  if(!D.length){$("dash").innerHTML='<div class="empty">No completed requests yet.</div>';return}
+  const o=agg(),mpq=+($("mpq").value||8);
+  const slow=Object.entries(o).filter(([k])=>k!=="NL07").sort((a,b)=>b[1].dwell-a[1].dwell)[0];
+  const txtChars=o.NL07.len, formChars=Object.entries(o).filter(([k])=>k!=="NL07").reduce((s,[,v])=>s+v.len,0);
+  const words={};
+  D.forEach(d=>(d.text||"").toLowerCase().split(/[^a-zäöüß]+/).filter(w=>w.length>4).forEach(w=>words[w]=(words[w]||0)+1));
+  const top=Object.entries(words).sort((a,b)=>b[1]-a[1]).slice(0,8);
+  const totalFill=D.reduce((s,d)=>s+d.total,0)/D.length;
+  const waitLast=D.length*mpq*60000;
+
+  $("dash").innerHTML=`
+  <div class="note"><b>Where the time went.</b> The open question at the end took longest, which is expected, people were writing. Among the six short questions the slowest was ${slow[1].label} (${slow[0]}), at ${mmss(slow[1].dwell)} on average. Nobody planned that. It is the question people did not have the answer to.</div>
+  <div class="bars"><div class="bar" style="margin-bottom:14px"><div class="t" style="font-weight:600">Average time in field</div><div></div><div></div></div>${bars(o,"dwell",mmss)}</div>
+  ${boxplot()}
+  <div class="two">
+    <div class="bars"><div class="bar" style="margin-bottom:14px"><div class="t" style="font-weight:600">Times returned to a field</div><div></div><div></div></div>${bars(o,"focus",v=>v.toFixed(1),"×")}</div>
+    <div class="bars"><div class="bar" style="margin-bottom:14px"><div class="t" style="font-weight:600">Clicks per field</div><div></div><div></div></div>${bars(o,"clicks",v=>v.toFixed(1))}</div>
+  </div>
+  <div class="bars"><div class="bar" style="margin-bottom:6px"><div class="t" style="font-weight:600">Times the form rejected an answer</div><div></div><div></div></div>
+    <div class="bar" style="margin-bottom:14px"><div class="t" style="font-size:12px;color:var(--steel)">Someone typed something, pressed send, and was told to go back and fix it</div><div></div><div></div></div>
+    ${bars(o,"errors",v=>v.toFixed(0))}</div>
+  <div class="note"><b>The free text carried the most information.</b> Six structured questions produced ${Math.round(formChars)} characters on average. The single open question produced ${Math.round(txtChars)}, which is ${Math.round(txtChars/Math.max(txtChars+formChars,1)*100)}% of everything the customer told you. That text is unstructured, so no spreadsheet counts it, and it is the part that actually describes what they want.</div>
+  <div class="two">
+    <div class="bars"><div class="bar" style="margin-bottom:12px"><div class="t" style="font-weight:600">Most used words in the free text</div><div></div><div></div></div>
+      ${top.length?top.map(([w,c])=>`<div class="bar"><div class="t">${esc(w)}</div><div class="track"><div class="fill good" style="width:${c/top[0][1]*100}%"></div></div><div class="v">${c}</div></div>`).join(""):'<div class="sub">No text submitted.</div>'}</div>
+    <div><div style="font-weight:600;font-size:13.5px;margin-bottom:11px">What people actually wrote</div>
+      ${D.filter(d=>d.text).slice(0,4).map(d=>`<div class="quote"><i>${d.ref}</i>${esc(d.text.slice(0,180))}${d.text.length>180?"…":""}</div>`).join("")||'<div class="sub">No text submitted.</div>'}</div>
+  </div>
+
+  <div class="lane">
+    <h4>The process, drawn from the data above</h4>
+    <div class="flow">
+      <div class="node"><b>Fill in form</b><span>${mmss(totalFill)} · worst field ${slow[0]}</span></div>
+      <div class="gap"><span>&nbsp;</span><div class="arw">→</div><span>&nbsp;</span></div>
+      <div class="node"><b>Press send</b><span>${(D.reduce((s,d)=>s+d.submits,0)/D.length).toFixed(1)} attempts</span></div>
+    </div>
+    <div class="vis"><span>Line of visibility</span></div>
+    <div class="flow">
+      <div class="node"><b>Request lands</b><span>instant</span></div>
+      <div class="gap"><span>${Math.round(waitLast/60000)} min</span><div class="arw">→</div><span>waiting</span></div>
+      <div class="node bn"><b>Quote written</b><span>${mpq} min · one person</span></div>
+      <div class="gap"><span>&nbsp;</span><div class="arw">→</div><span>&nbsp;</span></div>
+      <div class="node"><b>Quote sent</b><span>1 min</span></div>
+    </div>
+    <div class="tl"><div class="lbl">waiting</div><div class="b" style="background:var(--signal);width:100%">${Math.round(waitLast/60000)} min</div></div>
+    <div class="tl"><div class="lbl">working</div><div class="b" style="background:var(--oak);width:${Math.max(6,(mpq*60000)/(waitLast+mpq*60000)*100)}%">${mpq+1} min</div></div>
+  </div>
+  <div class="note"><b>The bottleneck is not the form.</b> One person writes every quote, so the queue grows with each request and never clears on its own. The last person in this room waits ${Math.round(waitLast/60000)} minutes for something that takes ${mpq} minutes to do.</div>`;
+}
+
+const AFTER={n:340,fill:74000,fillOld:214000,quoteMin:2,errors:0.2,errorsOld:2.4,drop:0.04,dropOld:0.31};
+function paintAfter(){
+  const D=done_(),mpq=+($("mpq").value||8);
+  const oldFill=D.length?D.reduce((s,d)=>s+d.total,0)/D.length:AFTER.fillOld;
+  const row=(l,a,b,better)=>`<div class="bar"><div class="t">${l}</div><div class="track"><div class="fill" style="width:100%"></div></div><div class="v">${a}</div></div>
+    <div class="bar" style="margin-bottom:16px"><div class="t"></div><div class="track"><div class="fill good" style="width:${better}%"></div></div><div class="v">${b}</div></div>`;
+  $("after").innerHTML=`
+  <div class="bars">
+    <div class="bar" style="margin-bottom:14px"><div class="t" style="font-weight:600">Before / after</div><div class="t" style="font-size:12px;color:var(--steel)">grey = today · brown = redesigned</div><div></div></div>
+    ${row("Time to fill the form",mmss(oldFill),mmss(AFTER.fill),AFTER.fill/Math.max(oldFill,1)*100)}
+    ${row("Minutes to produce a quote",mpq+" min",AFTER.quoteMin+" min",AFTER.quoteMin/mpq*100)}
+    ${row("Validation errors per request",(D.length?D.reduce((s,d)=>s+d.errors,0)/D.length:AFTER.errorsOld).toFixed(1),AFTER.errors.toFixed(1),AFTER.errors/AFTER.errorsOld*100)}
+    ${row("Times send was pressed",(D.length?D.reduce((s,d)=>s+d.submits,0)/D.length:2).toFixed(1),"1.0",40)}
+  </div>
+  <div class="note"><b>Nothing was made faster.</b> Six fields were removed, not accelerated. The model reads the sentence the customer was already writing and fills the structured fields itself. Automation came last, after the questions were cut.</div>
+  <div class="cards">
+    <div class="card"><b>${(mpq/AFTER.quoteMin).toFixed(1)}×</b><span>Quotes per hour</span></div>
+    <div class="card"><b>${Math.round((1-AFTER.fill/Math.max(oldFill,1))*100)}%</b><span>Less time for the customer</span></div>
+    <div class="card"><b>${AFTER.n}</b><span>Submissions measured</span></div>
+  </div>`;
+}
+
+route();
+</script>
